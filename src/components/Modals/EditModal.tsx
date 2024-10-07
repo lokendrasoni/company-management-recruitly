@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Flex, Input, Modal, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { updateCompany } from '@/apis';
@@ -14,8 +14,12 @@ export default function EditModal({
     company: any;
     refetch: any;
 }) {
-    const [companyToEdit, setCompanyToEdit] = useState(company);
+    const [companyToEdit, setCompanyToEdit] = useState<any>({});
     const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        setCompanyToEdit(company);
+    }, [company]);
 
     const editCompany = (val: any) => {
         setCompanyToEdit((c: any) => {
@@ -27,13 +31,15 @@ export default function EditModal({
         e.preventDefault();
         setLoading(true);
 
-        await updateCompany(companyToEdit);
-        await refetch();
+        const res = await updateCompany(companyToEdit);
+        if (res) {
+            await refetch();
 
-        notifications.show({
-            message: 'Details updated!',
-            color: 'green',
-        });
+            notifications.show({
+                message: 'Details updated!',
+                color: 'green',
+            });
+        }
 
         setLoading(false);
     };
@@ -49,7 +55,7 @@ export default function EditModal({
                     <Flex justify="space-between">
                         <Title size="h6">Owner Name</Title>
                         <Input
-                            value={companyToEdit?.ownerName}
+                            value={company?.ownerName}
                             placeholder="Owner Name"
                             onChange={(e) => {
                                 editCompany({ ownerName: e.target.value });
@@ -59,7 +65,7 @@ export default function EditModal({
                     <Flex justify="space-between">
                         <Title size="h6">Country</Title>
                         <Input
-                            value={company?.headOffice?.address?.countryName}
+                            value={companyToEdit?.headOffice?.address?.countryName}
                             placeholder="Country"
                             onChange={(e) => {
                                 editCompany({
@@ -75,7 +81,7 @@ export default function EditModal({
                     <Flex justify="space-between">
                         <Title size="h6">State</Title>
                         <Input
-                            value={company?.headOffice?.address?.regionName}
+                            value={companyToEdit?.headOffice?.address?.regionName}
                             placeholder="State"
                             onChange={(e) => {
                                 editCompany({
@@ -91,7 +97,7 @@ export default function EditModal({
                     <Flex justify="space-between">
                         <Title size="h6">City</Title>
                         <Input
-                            value={company?.headOffice?.address?.cityName}
+                            value={companyToEdit?.headOffice?.address?.cityName}
                             placeholder="City"
                             onChange={(e) => {
                                 editCompany({

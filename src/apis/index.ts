@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { notifications } from '@mantine/notifications';
 
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY;
 const URL = 'https://api.recruitly.io/api';
 
 const catchAsync = async (cb: () => {}) => {
@@ -27,6 +27,6 @@ export const updateCompany = async (body = {}) => {
     return await catchAsync(async () => {
         const res = await axios.post(`${URL}/company?apiKey=${API_KEY}`, body);
 
-        return res?.data?.data;
+        return res?.data;
     });
 };
