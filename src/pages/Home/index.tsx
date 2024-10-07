@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { IconEye, IconPencil } from '@tabler/icons-react';
+import { IconEye, IconMoon, IconPencil, IconSun } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import {
     AppShell,
@@ -12,6 +12,7 @@ import {
     Text,
     Title,
     Tooltip,
+    useMantineColorScheme,
 } from '@mantine/core';
 import { listCompany } from '@/apis';
 import EditModal from '@/components/Modals/EditModal';
@@ -24,6 +25,7 @@ export default function Home() {
 
     const { isLogin, setIsLogin } = useContext(UserStore);
     const navigate = useNavigate();
+    const { setColorScheme, colorScheme } = useMantineColorScheme();
 
     const [companies, setCompanies] = useState<any>(null);
     const [openEdit, setOpenEdit] = useState<boolean>(false);
@@ -61,10 +63,19 @@ export default function Home() {
                     justifyContent: 'end',
                     alignItems: 'center',
                     paddingRight: '20px',
+                    gap: '10px',
                 }}
             >
                 <Button
-                    color="transparent"
+                    variant="default"
+                    onClick={() => {
+                        setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
+                    }}
+                >
+                    {colorScheme === 'light' ? <IconMoon /> : <IconSun />}
+                </Button>
+                <Button
+                    color="red"
                     onClick={() => {
                         localStorage.removeItem('isLogin');
                         setIsLogin(false);
